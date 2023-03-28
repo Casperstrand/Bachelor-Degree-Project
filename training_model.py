@@ -1,6 +1,8 @@
 import nltk
+import re
 from lemmatization import lemmatizer
 from stopwords import stopwords
+from twitter_connection import twitterConnection
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import model_selection, svm
@@ -15,6 +17,7 @@ class trainingModel:
         self.lemmatizer = lemmatizer(language)
         self.stopwords = stopwords(language)
         self.model = svm.SVC()
+        self.twitter_con = twitterConnection()
         self.text_processing()
         self.training()
 
@@ -39,12 +42,24 @@ class trainingModel:
 
     def training(self):
         self.train_x, self.test_x, self.train_y, self.test_y = model_selection.train_test_split(self.df['final_text'], self.df['sentiment'], test_size=0.2)
-        tfidvect = TfidfVectorizer(max_features=5000)
-        tfidvect.fit(self.df['final_text'])
-        self.train_x_tfidf = tfidvect.transform(self.train_x)
-        self.test_x_tfidf = tfidvect.transform(self.test_x)
+        self.tfidvect = TfidfVectorizer(max_features=5000)
+        self.tfidvect.fit(self.df['final_text'])
+        self.train_x_tfidf = self.tfidvect.transform(self.train_x)
+        self.test_x_tfidf = self.tfidvect.transform(self.test_x)
         self.model.fit(self.train_x_tfidf, self.train_y)
 
     def check_accuracy(self):
         pred = self.model.predict(self.test_x_tfidf)
         return accuracy_score(pred, self.test_y)
+
+    def search_count(self, term, lang):
+        positive_count = 0
+        negative_count = 0
+        list = self.twitter_con.search(term, lang)
+        for line in list:
+            if self.model.predict(self.tfidvect.transform([line.text])) == 'negative':
+                negative_count += 1
+            elif self.model.predict(self.tfidvect.transform([line.text])) == 'positive':
+                positive_count += 1
+
+        return positive_count, negative_count
