@@ -1,7 +1,18 @@
 from fastapi import FastAPI
-from english_model import EnglishModel
+import pickle
+
+
 app = FastAPI()
 
-@app.get('/')
-def search():
-    return 'Hello'
+english = pickle.load(open('Trained Models/English_Model.pkl', 'rb'))
+@app.get('/Search')
+def search(term : str, lang : str):
+    if lang == 'English':
+        return english.search(term)
+    else:
+        return english.translated_search(term)
+
+
+@app.get('/Check Accuracy')
+def check_accuracy():
+    return english.check_accuracy()

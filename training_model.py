@@ -1,12 +1,12 @@
 import nltk
-import re
+import pandas as pd
+import translate
+import pickle
 from lemmatization import lemmatizer
 from stopwords import stopwords
 from twitter_connection import twitterConnection
-import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import model_selection, svm
-from sklearn.metrics import accuracy_score
 
 
 class trainingModel:
@@ -49,8 +49,7 @@ class trainingModel:
         self.model.fit(self.train_x_tfidf, self.train_y)
 
     def check_accuracy(self):
-        pred = self.model.predict(self.test_x_tfidf)
-        return accuracy_score(pred, self.test_y)
+        return self.model.score(self.test_x_tfidf, self.test_y)
 
     def search_count(self, term, lang):
         positive_count = 0
@@ -60,6 +59,18 @@ class trainingModel:
             if self.model.predict(self.tfidvect.transform([line.text])) == 'negative':
                 negative_count += 1
             elif self.model.predict(self.tfidvect.transform([line.text])) == 'positive':
+                positive_count += 1
+
+        return positive_count, negative_count
+    
+    def translated_search(self, term, lang, target_lang):
+        positive_count = 0
+        negative_count = 0
+        list = self.twitter_con.search(term, lang)
+        for line in list:
+            if self.model.predict(self.tfidvect.transform([translate.translate_text(target_lang,line.text)])) == 'negative':
+                negative_count += 1
+            elif self.model.predict(self.tfidvect.transform([translate.translate_text(target_lang,line.text)])) == 'positive':
                 positive_count += 1
 
         return positive_count, negative_count

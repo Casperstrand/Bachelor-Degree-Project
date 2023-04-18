@@ -5,7 +5,7 @@ class lemmatizer:
         if language == 'english':
             self.language = 'en'
         elif language == 'norwegian':
-            self.language = 'no'
+            self.language = 'nb'
 
     def lemmetize_words(self, word_list):
         lemmetized = [simplemma.lemmatize(w, self.language) for w in word_list]

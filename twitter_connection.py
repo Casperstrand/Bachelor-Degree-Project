@@ -1,6 +1,5 @@
 import tweepy
-import config
-import re
+from Credentials import config
 
 class twitterConnection:
 
