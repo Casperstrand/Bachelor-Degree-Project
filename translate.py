@@ -7,5 +7,4 @@ credentials = service_account.Credentials.from_service_account_file('Credentials
 translate_client = translate.Client(credentials=credentials)
 def translate_text(text, target):
     result = translate_client.translate(text, target_language=target)
-
     return result["translatedText"]
