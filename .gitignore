@@ -1,12 +1,3 @@
-IMDB Dataset.csv
-config.py
-norwegian_train.csv
-credintials.json
-cryptic-tower-376516-85193ea924d9.json
-brexit_en.csv
-brexit_es.csv
-oslo_no.csv
-brexit_es.txt
 norec_sentence-main/aggregation.py
 norec_sentence-main/README.md
 norec_sentence-main/3class/dev.json

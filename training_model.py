@@ -1,7 +1,6 @@
 import nltk
 import pandas as pd
 import translate
-import pickle
 from lemmatization import lemmatizer
 from stopwords import stopwords
 from twitter_connection import twitterConnection
@@ -68,9 +67,9 @@ class trainingModel:
         negative_count = 0
         list = self.twitter_con.search(term, lang)
         for line in list:
-            if self.model.predict(self.tfidvect.transform([translate.translate_text(target_lang,line.text)])) == 'negative':
+            if self.model.predict(self.tfidvect.transform([translate.translate_text(text=line.text,target=target_lang)])) == 'negative':
                 negative_count += 1
-            elif self.model.predict(self.tfidvect.transform([translate.translate_text(target_lang,line.text)])) == 'positive':
+            elif self.model.predict(self.tfidvect.transform([translate.translate_text(text=line.text,target=target_lang)])) == 'positive':
                 positive_count += 1
 
         return positive_count, negative_count

@@ -11,9 +11,9 @@ def main():
     main.geometry("800x800")
     main.title("Search")
     searchBar = tk.Entry(main, width=50)
-    languages = ['English', 'Norwegian', 'Spanish', 'German']
+    languages = ['En', 'No', 'Es', 'De']
     clicked = tk.StringVar()
-    clicked.set( "English" )
+    clicked.set( "En" )
     drop = tk.OptionMenu(main,clicked,*languages)
 
     frame = tk.Frame(main)
